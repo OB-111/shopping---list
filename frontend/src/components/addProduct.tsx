@@ -41,7 +41,6 @@ const AddProduct: React.FC = () => {
         
         dispatch(saveProducts(products))
             .then(() => {toast.success("ההזמנה נסגרה ונשמרה במערכת!");
-                reset();
             })
             .catch(() => toast.error("בעייה בעת ביצוע ההזמנה"));
         reset();

@@ -16,12 +16,27 @@ export const addOrUpdateProducts = async (req: Request, res: Response) => {
                 await Product.create({ name, category, quantity });
             }
         }
-        res.status(201).json({ message: 'Products added/updated successfully' });
     } catch (error) {
         console.error('Error saving products:', error); // Log error
         res.status(500).json({ error: 'Failed to add/update products' });
     }
 };
+
+
+export const updateShoppingList = async (req: Request, res: Response) =>{
+    const newProducts = req.body;
+    console.log(newProducts);
+    
+    try {
+        await Product.destroy({where:{}});
+        await addOrUpdateProducts(req, res)
+        res.status(201).json({ message: 'Product Updated successfully' });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete product' });
+
+    }
+}
 
 // Delete a product
 export const deleteProduct = async (req: Request, res: Response) => {

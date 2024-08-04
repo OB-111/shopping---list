@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export interface Product {
     name: string;
@@ -24,21 +25,27 @@ const initialState: ProductState = {
 
 };
 
+export const getProducts = createAsyncThunk('/products/get',async()=>{
+    try {
+        const res = await axios.get<Product[]>('http://localhost:4000/api/products');
+        return res.data;
+    } catch (error) {
+        toast.error('Error get products')
+    }
+});
+
 // Async thunk to save products (finish order)
 export const saveProducts = createAsyncThunk<Product[] | undefined, Product[]>(
     'products/save',
     async (products: Product[]) => {
         try {
-            await axios.post('http://localhost:4000/api/products', products);
+            await axios.post('http://localhost:4000/api/products/update', products);
             return products;
         } catch (error) {
-            console.error("Error saving products", error);
+            toast.error("Error saving products");
         }
     }
 );
-
-
-
 
 const productSlice = createSlice({
     name: 'product',
@@ -57,7 +64,6 @@ const productSlice = createSlice({
         deleteProduct : (state, action:PayloadAction<{ name: string; category: string;quantity:number;}>) => {
             const productIndexToDelete = state.products.findIndex(product => product.name === action.payload.name && product.category === action.payload.category);
             const productToDelete = state.products[productIndexToDelete];
-            debugger;
             if (productIndexToDelete >=0) {
                 state.products.splice(productIndexToDelete,1)
                 state.total -= productToDelete.quantity;
@@ -66,15 +72,18 @@ const productSlice = createSlice({
 },
     extraReducers: (builder) => {
         builder
-            .addCase(saveProducts.fulfilled, (state) => {
+            .addCase(getProducts.fulfilled, (state,action) => {
+                state.loading = false;
+                state.products = action.payload || [];
+                state.total = action.payload?.length  || 0;
+            })
+            .addCase(getProducts.rejected, (state) => {
                 state.loading = false;
                 state.products = [];
-                state.total = 0 ;
+                state.total = 0;
+
             })
-            .addCase(saveProducts.rejected, (state) => {
-                state.loading = false;
-            })
-            .addCase(saveProducts.pending, (state) => {
+            .addCase(getProducts.pending, (state) => {
                 state.loading = true;
             });
     },

@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { deleteProduct, Product } from "../store/productSlice";
 
 const ProductList: React.FC = () => {
-    const { products } = useSelector((state: RootState) => state.product);
+    const products = useSelector((state: RootState) => state.product.products);
     const dispatch: AppDispatch = useDispatch();
 
     const categorizedProducts = products.reduce((acc: any, product) => {
