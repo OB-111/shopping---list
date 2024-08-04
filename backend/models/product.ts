@@ -1,5 +1,6 @@
 import { DataTypes, Sequelize, Model, Optional } from 'sequelize';
 
+// defines the shape of the attributes for the Product model.
 interface ProductAttributes {
     id : number;
     name: string;
@@ -9,7 +10,7 @@ interface ProductAttributes {
 
 interface ProductCreationAttributes extends Optional<ProductAttributes, 'id'> {}
 
-
+// class representing the Product model
 class Product extends Model<ProductAttributes,ProductCreationAttributes> implements ProductAttributes{
     public id!: number;
     public name!: string;
@@ -17,7 +18,7 @@ class Product extends Model<ProductAttributes,ProductCreationAttributes> impleme
     public quantity!: number;
 }
 
-
+//  initializes and returns the Category model
 export const ProductFactory = (sequelize: Sequelize): typeof Product => {
     Product.init(
         {
@@ -36,12 +37,13 @@ export const ProductFactory = (sequelize: Sequelize): typeof Product => {
             },
             quantity:{
                 type:DataTypes.INTEGER,
-                allowNull: false
+                allowNull: true,
+                defaultValue: 1,
+
             }
         },{
-            // tableName:'products',
-            tableName:'shopping_list',
-
+            tableName:'products',
+            // tableName:'shopping_list',
             sequelize,
         }
     )

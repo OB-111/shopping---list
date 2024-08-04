@@ -1,13 +1,16 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import productRoutes from '../routes/productRoute';
+import productRoutes from '../routes/productRoutes';
+import categoryRoutes from '../routes/categoryRoutes';
+import cors from 'cors';
 import { sequelize } from '../models';
 
 const app = express();
-
+app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/api', productRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/categories', categoryRoutes); // Mount categoryRoutes under /api/categories
 
 sequelize.authenticate()
     .then(() => {
@@ -22,3 +25,4 @@ sequelize.authenticate()
     });
 
 export default app;
+

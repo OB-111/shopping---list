@@ -1,66 +1,100 @@
 import { Button, MenuItem, TextField ,Grid,Box} from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct, saveProducts } from "../store/productSlice";
 import { AppDispatch, RootState } from "../store";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
 
-
-const categories = ['ירקות ופירות' , 'מוצרי ניקיון' , 'מאפים' , 'בשר ודגים'];
+interface FormValues {
+    name: string;
+    category: string;
+}
 
 const AddProduct: React.FC = () => {
 
-    const [name,setName]= useState('');
-    const [category,setCategory]= useState('');
-    // const dispatch= useDispatch();
-    const products = useSelector((state: RootState) => state.product.products); // Access state from Redux
-    const dispatch: AppDispatch = useDispatch(); // Type dispatch with AppDispatch
+    const [categories, setCategories] = useState<string[]>([]);
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>();
+    const dispatch: AppDispatch = useDispatch();
+    const { products } = useSelector((state: RootState) => state.product);
 
+    useEffect(() => {
+        axios.get('http://localhost:4000/api/categories')
+            .then((response: { data: { name: string; }[]; }) => 
+                setCategories(response.data.map((cat: { name: string }) => cat.name)))
+            .catch((error: any) => console.error('Failed to fetch categories', error));
+    }, []);
 
-    const handelAddProduct = () =>{
-        if(name && category){
-            dispatch(addProduct({name, category}));
-            // dispatch(saveProducts([{name:'fhjeksdl',category:'ds',quantity:1}]));
-            saveProducts(products)
-            setName('');
-            setCategory('');
+    const onSubmit: SubmitHandler<FormValues> = ({ name, category }) => {
+        const newProduct = { name, category, quantity: 1 };
+        dispatch(addProduct(newProduct));
+        reset();
+    };
+
+    const handleSave = () => {
+        if (products.length === 0) {
+            toast.error("אין מוצרים בסל הקניות!");
+            return;
         }
-    }
+        
+        dispatch(saveProducts(products))
+            .then(() => {toast.success("ההזמנה נסגרה ונשמרה במערכת!");
+                reset();
+            })
+            .catch(() => toast.error("בעייה בעת ביצוע ההזמנה"));
+        reset();
+    };
+
 
     return (
-    <div>
+        <div>
+            <ToastContainer />
+            <Box sx={{ mt: 2 }}>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Grid container spacing={2} justifyContent="center">
+                        <Grid item>
+                            <TextField
+                                label="מוצר"
+                                {...register("name", { required: "הזן שם מוצר" })}
+                                error={!!errors.name}
+                                helperText={errors.name ? errors.name.message : ""}
+                            />
+                        </Grid>
+                        <Grid item >
+                            <TextField 
+                                select
+                                label="קטגוריה"
+                                {...register("category", { required: "קטגורייה הינו שדה חובה" })}
+                                error={!!errors.category}
+                                helperText={errors.category ? errors.category.message : ""}
+                                style={{ minWidth: 200 }}
+                                defaultValue={''}
 
-         <Box sx={{ mt: 2 }}>
-            <Grid container spacing={2} justifyContent="center">
-                <Grid item>
-                    <TextField
-                        label="מוצר"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                </Grid>
-                <Grid item>
-                    <TextField
-                        select
-                        label="קטגוריה"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        style={{ minWidth: 200 }}
-                    >
-                        {categories.map((option) => (
-                            <MenuItem key={option} value={option} autoFocus= {true}>
-                                {option}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </Grid>
-                <Grid item>
-                    <Button variant= "contained" onClick={handelAddProduct}>
-                        הוסף
-                    </Button>
-                </Grid>
-            </Grid>
-        </Box>
-    </div>);
+                            >
+                                {categories.map((option) => (
+                                    <MenuItem key={option} value={option} autoFocus={true} >
+                                        {option}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" type="submit">
+                                הוסף
+                            </Button>
+                        </Grid>
+                        <Grid item >
+                        <Button type="button" variant="contained" disabled={!products.length} onClick={handleSave}>
+                            סיים הזמנה
+                        </Button>
+                    </Grid>
+                    </Grid>
+                </form>
+            </Box>
+        </div>
+    );
 }
 
 export default AddProduct;

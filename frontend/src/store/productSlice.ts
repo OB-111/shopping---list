@@ -1,72 +1,84 @@
-import {createAsyncThunk, createSlice , PayloadAction} from '@reduxjs/toolkit';
-import { saveShoppingList } from '../api';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-
-interface Product  {
+export interface Product {
     name: string;
     category: string;
     quantity: number;
-} 
-
-
+}
+export interface Order {
+    id: string;
+    products: Product[];
+}
 interface ProductState {
+    
     products: Product[];
     total: number;
+    loading: boolean;
 }
 
 const initialState: ProductState = {
-    products:[],
-    total:0
+    products: [],
+    total: 0,
+    loading: false,
+
 };
 
-
-export const saveProducts = createAsyncThunk <void, Product[]>(
-    'api/save',
+// Async thunk to save products (finish order)
+export const saveProducts = createAsyncThunk<Product[] | undefined, Product[]>(
+    'products/save',
     async (products: Product[]) => {
-        console.log('check from createAsync');
-        
-        await saveShoppingList(products);
+        try {
+            await axios.post('http://localhost:4000/api/products', products);
+            return products;
+        } catch (error) {
+            console.error("Error saving products", error);
+        }
     }
 );
-// check if product exist , if the product found increment the quantity , else add a new one.
-const productSlice = createSlice({
-    name:'product',
-    initialState,
-    reducers:{
 
-        addProduct : (state, action:PayloadAction<{ name: string; category: string;}>) => {
-            const {name, category} = action.payload;
-            const existingProduct = state.products.find(product => product.name === name);
-            if (existingProduct) {
-                existingProduct.quantity +=1;
-            }
-            else{
-                state.products.push({name, category, quantity:1});
-            }
+
+
+
+const productSlice = createSlice({
+    name: 'product',
+    initialState,
+    reducers: {
+        addProduct : (state, action:PayloadAction<{ name: string; category: string;quantity:number;}>) => {
+            const productIndexToDelete = state.products.findIndex(product => product.name === action.payload.name && product.category === action.payload.category);
+            const {name,category} = action.payload
+            const existingProduct = state.products[productIndexToDelete];
+            existingProduct ?
+            existingProduct.quantity = (existingProduct.quantity || 0) + 1 :state.products.push({ name,category,quantity:1});
             state.total += 1;
+            
         },
 
-        // i thought that it necssary to add delete product option 
-        deleteProduct : (state, action:PayloadAction<{ name: string; category: string;}>) => {
-            const {name, category} = action.payload;
-            const productIndex = state.products.findIndex(product => product.name === name && product.category === category);
-            if(productIndex >=0){
-                const productToDelete = state.products[productIndex];
+        deleteProduct : (state, action:PayloadAction<{ name: string; category: string;quantity:number;}>) => {
+            const productIndexToDelete = state.products.findIndex(product => product.name === action.payload.name && product.category === action.payload.category);
+            const productToDelete = state.products[productIndexToDelete];
+            debugger;
+            if (productIndexToDelete >=0) {
+                state.products.splice(productIndexToDelete,1)
                 state.total -= productToDelete.quantity;
-                state.products.slice(productIndex,1); 
-            }
         }
-    },    extraReducers: (builder) => {
+    }
+},
+    extraReducers: (builder) => {
         builder
             .addCase(saveProducts.fulfilled, (state) => {
-                // Handle any state changes if needed after saving
+                state.loading = false;
+                state.products = [];
+                state.total = 0 ;
             })
-            .addCase(saveProducts.rejected, (state, action) => {
-                console.error('Failed to save products:', action.error.message);
+            .addCase(saveProducts.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(saveProducts.pending, (state) => {
+                state.loading = true;
             });
     },
 });
-
 
 export const {addProduct,deleteProduct} = productSlice.actions;
 export default productSlice.reducer;
