@@ -1,5 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { ProductFactory } from './product';
+import { CategoryFactory } from './category';
+
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -14,14 +16,14 @@ const sequelize = new Sequelize(
         dialect: process.env.DB_DIALECT as 'mssql',
         dialectOptions: {
             options: {
-                encrypt: true, // Use encryption for Cloud SQL
-                trustServerCertificate: true, // Trust the self-signed certificate
-                serverName: 'zeta-bebop-431208-v6:me-west1:shopping-list' // Optional: Use the instance connection name instead of IP
+                encrypt: true, 
+                trustServerCertificate: true, 
+                serverName: process.env.DB_SERVER_NAME 
             }
         },
         logging: process.env.NODE_ENV === 'development' ? console.log : false // Enable logging in development only
     }
 );
 const Product = ProductFactory(sequelize);
-
-export { sequelize, Product };
+const Category = CategoryFactory(sequelize);
+export { sequelize, Product,Category };

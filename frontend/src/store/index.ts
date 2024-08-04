@@ -7,7 +7,7 @@ const store = configureStore({
         product : productReducer
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(/* add additional middlewares here if needed */),
+        getDefaultMiddleware().concat(),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

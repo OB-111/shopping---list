@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { List, ListItem, ListItemText,Grid,Typography,CardContent,Card,Button,} from "@mui/material";
-import { deleteProduct } from "../store/productSlice";
+import { AppDispatch, RootState } from "../store";
+import { Grid, Typography, CardContent, Card, Button, Box } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { toast, ToastContainer } from "react-toastify";
+import { deleteProduct, Product } from "../store/productSlice";
 
 const ProductList: React.FC = () => {
-    const products = useSelector((state:RootState) => state.product.products);
-    const dispatch = useDispatch();
+    const products = useSelector((state: RootState) => state.product.products);
+    const dispatch: AppDispatch = useDispatch();
 
-    // initate the Basket by catgories and check if exist
     const categorizedProducts = products.reduce((acc: any, product) => {
         if (!acc[product.category]) {
             acc[product.category] = [];
@@ -17,40 +17,43 @@ const ProductList: React.FC = () => {
         return acc;
     }, {});
 
-    const handleDelete = (name: string, category: string) => {
-        dispatch(deleteProduct({ name, category }));
+    const handleDelete = (product:Product) => {
+        // dispatch(deleteProduct({ name, category })).then(()=>toast.success("מוצר נמחק בהצלחה מסל הקניות!")).catch(()=> toast.error("שגיאה בעת מחיקת מוצר."));
+        // toast.success("Product deleted successfully!");\
+        dispatch(deleteProduct(product))
     };
+    
 
     return (
-    // <List>
-    //     {products.map((product, index) => (
-    //         <ListItem key={index}>
-    //             <ListItemText primary = {`${product.name} ${product.quantity}`} secondary = {product.category}/>
-    //         </ListItem>
-    //     ))}
-    // </List>
-    <Grid container spacing={2} justifyContent="center">
-    {Object.keys(categorizedProducts).map((category) => (
-        <Grid item key={category} xs={12} md={6} lg={4}>
-            <Card>
-                <CardContent>
-                    <Typography variant="h6">{category}</Typography>
-                    {categorizedProducts[category].map((product: any, index: number) => (
-                        <Card >
-                        <Typography key={index}>
-                            {product.name} ({product.quantity})
-                        </Typography>  
-                        
-                        <Button variant="contained" size="small"  startIcon={<DeleteIcon /> }>Delete</Button>
+        <Box>
+            <Grid container spacing={2} justifyContent="center">
+                {Object.keys(categorizedProducts).map((category) => (
+                    <Grid item key={category} xs={12} md={6} lg={4}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6">{category}</Typography>
+                                {categorizedProducts[category].map((product: any, index: number) => (
+                                    <Card key={`${category}-${product.name}`}>
+                                        <Typography>
+                                            {product.name} ({product.quantity})
+                                        </Typography>
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            startIcon={<DeleteIcon />}
+                                            onClick={() => handleDelete(product)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Card>
+                                ))}
+                            </CardContent>
                         </Card>
-
-                    ))}
-                    
-                </CardContent>
-            </Card>
-        </Grid>
-    ))}
-</Grid>
+                    </Grid>
+                ))}
+            </Grid>
+            <ToastContainer />
+        </Box>
     );
 }
 

@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import AddProduct from './components/addProduct';
 import { Box, Container, Typography } from '@mui/material';
 import ProductList from './components/productList';
 import TotalProducts from './components/totalProducts';
+import { useDispatch } from 'react-redux';
+import { getProducts } from './store/productSlice';
+import { AppDispatch } from './store';
 
 function App() {
+  const dispatch : AppDispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(getProducts());
+  },[]);
+
   return (
     <Container>
     <Box sx={{ textAlign: 'center', my: 4 }}>
