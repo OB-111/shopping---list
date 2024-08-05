@@ -19,6 +19,10 @@
     "sequelize": "^6.37.3",
     "tedious": "^18.3.0"
   },
+  "engines": {
+    "node": "20.x",
+    "npm": "10.x"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
