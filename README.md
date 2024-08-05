@@ -25,11 +25,13 @@ and when he clicks on the finish order button, the shopping list will be saved i
    sh
    cd backend / npm install /npm run dev
 
-4. Download dependencies 
+4. paste .env file under backend folder
+ 
+5. Download dependencies 
    sh
    cd frontend / npm install / npm start
      
-5. Open the URL below and you ready to go
+6. Open the URL below and you ready to go
     ```sh
      http://localhost:3000
 
