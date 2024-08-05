@@ -2,6 +2,8 @@
 
 This application is designed to manage shopping list products.
 
+production link will be update soon
+
 # workflow
 
 I added a deletion option to every product before me that is saved
