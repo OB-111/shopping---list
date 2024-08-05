@@ -6,6 +6,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start" : "cd backend && npm start"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OB-111/shopping---list.git"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

@@ -88,7 +88,9 @@ const AddProduct: React.FC = () => {
                 ))}
               </TextField>
             </Grid>
-            <Grid item>
+          </Grid>
+          <Grid display={"flex"} justifyContent={"center"} gap={5} padding={4} >
+          <Grid item>
               <Button variant="contained" type="submit">
                 הוסף
               </Button>
