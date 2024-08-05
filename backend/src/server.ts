@@ -3,8 +3,6 @@
 
 // const PORT = process.env.PORT || 4000;
 
-
-
 // sequelize.sync({ force: true }).then(async () => {
 //     const Category = (await import('./models/category')).default;
 //     await Category.bulkCreate([
