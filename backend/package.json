@@ -4,10 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "preinstall": "npm install -g typescript",
+    "preinstall": "npm install -g typescript && npm i",
     "dev": "nodemon src/app.ts",
-    "build": "tsc",
-    "postinstall": "npm run build",
+    "build": "tsc",    
     "start": "node dist/app.js",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
