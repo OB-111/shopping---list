@@ -1,6 +1,9 @@
 // import { sequelize } from './models';
 // import app from './app';
+// import { sequelize } from './models';
+// import app from './app';
 
+// const PORT = process.env.PORT || 4000;
 // const PORT = process.env.PORT || 4000;
 
 // sequelize.sync({ force: true }).then(async () => {
