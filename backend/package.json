@@ -5,10 +5,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/app.ts",
-    "build": "./node_modules/typescript/bin/tsc",    
+    "build": "tsc",    
     "start": "node dist/app.js",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
-  },
+  },  
   "keywords": [],
   "author": "",
   "license": "ISC",
