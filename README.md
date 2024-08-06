@@ -6,13 +6,13 @@ production link will be update soon
 
 # workflow
 
-I added a deletion option to every product before me that is saved
+I added a deletion option to every product that will be able before saving the shopping list
 Adding products by categories and quantities to the same product
 
 The application is used to save the shopping basket, which means that the user must create a shopping basket and edit it as he wishes,
 and when he clicks on the finish order button, the shopping list will be saved in the DB and it will be possible to see the list on the screen even after a refresh .
 
-
+in the db i used GCP with SQLSERVER
 ### Installation + Running The Application
 
 1. Clone the repository to your local machine:
