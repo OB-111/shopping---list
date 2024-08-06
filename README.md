@@ -12,6 +12,10 @@ Adding products by categories and quantities to the same product
 The application is used to save the shopping basket, which means that the user must create a shopping basket and edit it as he wishes,
 and when he clicks on the finish order button, the shopping list will be saved in the DB and it will be possible to see the list on the screen even after a refresh .
 
+I emphasize again, the logic works in such a way that products can be added to the basket and when saving is performed, the basket is saved and the program ends
+I can update more functionality that I thought about, such as deleting or saving per order, but from understanding your task, this is what I understood that needs to be done
+I am always available for any question
+
 in the db i used GCP with SQLSERVER
 ### Installation + Running The Application
 
