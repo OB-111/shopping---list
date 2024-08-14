@@ -10,7 +10,6 @@ import {
   IconButton,
   Divider 
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { toast, ToastContainer } from "react-toastify";
 import { deleteProduct, Product } from "../store/productSlice";
 import { DeleteOutlined } from "@mui/icons-material";
@@ -46,7 +45,7 @@ const ProductList: React.FC = () => {
                     key={`${category}-${product.name}`} 
                     variant="outlined" 
                     sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' ,boxShadow: 3, // Adds a default shadow
-                      border: '1px solid #b2ebf2',     backgroundColor: '#e0f7fa',
+                      border: '1px solid #b2ebf2', backgroundColor: '#e0f7fa',
                     }}
                   >
                     <CardContent sx={{ flexGrow: 1 }}>

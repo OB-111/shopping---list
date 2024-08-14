@@ -24,6 +24,8 @@ const sequelize = new Sequelize(
     logging: process.env.NODE_ENV === "development" ? console.log : false, // Enable logging in development only
   },
 );
+
+
 const Product = ProductFactory(sequelize);
 const Category = CategoryFactory(sequelize);
 export { sequelize, Product, Category };

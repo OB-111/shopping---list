@@ -42,3 +42,13 @@ export const getSavedProducts = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch saved products" });
   }
 };
+
+// delete saved products
+export const deleteSavedProducts = async (req: Request, res: Response) => {
+  try {
+    await Product.destroy({ where: {} });
+    res.status(200).json({ message: "All products deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete products" });
+  }
+};

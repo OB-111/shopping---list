@@ -1,7 +1,7 @@
 import { Button, MenuItem, TextField, Grid, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, saveProducts } from "../store/productSlice";
+import { addProduct, checkIfDataExists, deleteSavedList, saveProducts,resetOrder  } from "../store/productSlice";
 import { AppDispatch, RootState } from "../store";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
@@ -15,6 +15,8 @@ interface FormValues {
 
 const AddProduct: React.FC = () => {
   const [categories, setCategories] = useState<string[]>([]);
+  const [saveButtonDisabled, setSaveButtonDisabled] = useState(false); // Manage save button state
+
   const {
     register,
     handleSubmit,
@@ -22,7 +24,7 @@ const AddProduct: React.FC = () => {
     formState: { errors },
   } = useForm<FormValues>();
   const dispatch: AppDispatch = useDispatch();
-  const { products } = useSelector((state: RootState) => state.product);
+  const { products ,isDataPresent } = useSelector((state: RootState) => state.product);
 
   useEffect(() => {
     axios
@@ -33,7 +35,8 @@ const AddProduct: React.FC = () => {
       .catch((error: any) =>
         console.error("Failed to fetch categories", error),
       );
-  }, []);
+      dispatch(checkIfDataExists());
+    }, [dispatch]);
 
   const onSubmit: SubmitHandler<FormValues> = ({ name, category }) => {
     const newProduct = { name, category, quantity: 1 };
@@ -46,13 +49,30 @@ const AddProduct: React.FC = () => {
       toast.error("אין מוצרים בסל הקניות!");
       return;
     }
+    setSaveButtonDisabled(true); // Disable the button
 
     dispatch(saveProducts(products))
       .then(() => {
         toast.success("ההזמנה נסגרה ונשמרה במערכת!");
         reset();
+        dispatch(checkIfDataExists()); // Ensure data exists check is performed
+
       })
-      .catch(() => toast.error("בעייה בעת ביצוע ההזמנה"));
+      .catch((error) =>{
+        toast.error("בעייה בעת ביצוע ההזמנה");
+        console.error("Error in handleSave:", error);
+
+      } ).finally(() => setSaveButtonDisabled(false));
+  };
+ 
+  const handleDeleteSavedList = () => {
+    dispatch(deleteSavedList())
+      .then(() => {
+        toast.success("רשימת הקניות נמחקה בהצלחה");
+        dispatch(resetOrder()); // Reset order state
+        dispatch(checkIfDataExists()); // Re-check if data exists
+      })
+      .catch(() => toast.error("בעייה בעת מחיקת הרשימה"));
   };
 
   return (
@@ -99,10 +119,20 @@ const AddProduct: React.FC = () => {
               <Button
                 type="button"
                 variant="contained"
-                disabled={!products.length}
+                disabled={!products.length || saveButtonDisabled} // Disable based on state
                 onClick={handleSave}
               >
                 סיים הזמנה
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                   type="button"
+                   variant="contained"
+                   disabled={!isDataPresent}
+                   onClick={handleDeleteSavedList}
+              >
+                מחק רשימה קיימת
               </Button>
             </Grid>
           </Grid>
