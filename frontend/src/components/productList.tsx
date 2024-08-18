@@ -19,14 +19,16 @@ const ProductList: React.FC = () => {
   const products = useSelector((state: RootState) => state.product.products);
   const dispatch: AppDispatch = useDispatch();
 
-  const categorizedProducts = products.reduce((acc: any, product) => {
+  // keys represent product categories and the values are arrays of products in that category
+  const categorizedProducts = products.reduce((acc: Record<string, Product[]>, product) => {
     if (!acc[product.category]) {
       acc[product.category] = [];
     }
     acc[product.category].push(product);
     return acc;
   }, {});
-
+  console.log(categorizedProducts);
+  
   const handleDelete = (product: Product) => {
     dispatch(deleteProduct(product));
   };

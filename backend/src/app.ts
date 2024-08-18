@@ -7,15 +7,18 @@ import { sequelize } from "./models";
 import path from "path";
 
 const _dirname = path.dirname("");
-const buildPath = path.join(_dirname,'../frontend/build')
+const buildPath = path.join(_dirname,'../frontend/build');
+
 const app = express();
-app.use(cors());
+
+app.use((cors()));
 app.use(bodyParser.json());
 
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use(express.static(buildPath));
 
+// 
 app.get("/*",function(req:Request,res:Response){
   res.sendFile(path.join(_dirname,'../frontend/build/index.html'),function(err){
     if(err){

@@ -46,7 +46,6 @@ const AddProduct: React.FC = () => {
       toast.error("אין מוצרים בסל הקניות!");
       return;
     }
-
     dispatch(saveProducts(products))
       .then(() => {
         toast.success("ההזמנה נסגרה ונשמרה במערכת!");

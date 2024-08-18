@@ -13,3 +13,11 @@ const TotalProducts: React.FC = () => {
 };
 
 export default TotalProducts;
+
+
+
+
+
+
+
+

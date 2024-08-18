@@ -3,10 +3,10 @@ import "./App.css";
 import AddProduct from "./components/addProduct";
 import { Box, Container, Typography } from "@mui/material";
 import ProductList from "./components/productList";
-import TotalProducts from "./components/totalProducts";
 import { useDispatch } from "react-redux";
 import { getProducts } from "./store/productSlice";
 import { AppDispatch } from "./store";
+import TotalProducts from "./components/totalProducts";
 
 function App() {
   const dispatch: AppDispatch = useDispatch();

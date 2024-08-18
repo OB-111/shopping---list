@@ -11,6 +11,7 @@ export interface Order {
   id: string;
   products: Product[];
 }
+
 interface ProductState {
   products: Product[];
   total: number;
@@ -80,10 +81,7 @@ const productSlice = createSlice({
         quantity: number;
       }>,
     ) => {
-      const { name, category } = action.payload as {
-        name: string;
-        category: string;
-      };
+      const { name, category } = action.payload;
       const productIndexToDelete = state.products.findIndex(
         (product) => product.name === name && product.category === category,
       );
