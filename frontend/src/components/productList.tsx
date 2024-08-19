@@ -5,12 +5,10 @@ import {
   Typography,
   CardContent,
   Card,
-  Button,
   Box,
   IconButton,
   Divider 
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { toast, ToastContainer } from "react-toastify";
 import { deleteProduct, Product } from "../store/productSlice";
 import { DeleteOutlined } from "@mui/icons-material";
@@ -27,12 +25,10 @@ const ProductList: React.FC = () => {
     acc[product.category].push(product);
     return acc;
   }, {});
-  console.log(categorizedProducts);
   
   const handleDelete = (product: Product) => {
     dispatch(deleteProduct(product));
   };
-
 
   return (
     <Box sx={{ mt: 4 }}>

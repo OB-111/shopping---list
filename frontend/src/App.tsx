@@ -9,6 +9,7 @@ import { AppDispatch } from "./store";
 import TotalProducts from "./components/totalProducts";
 
 function App() {
+  
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {

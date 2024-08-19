@@ -3,6 +3,7 @@ import { RootState } from "../store";
 import { Box, Typography } from "@mui/material";
 
 const TotalProducts: React.FC = () => {
+  
   const total = useSelector((state: RootState) => state.product.total);
 
   return (

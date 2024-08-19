@@ -7,10 +7,6 @@ export interface Product {
   category: string;
   quantity: number;
 }
-export interface Order {
-  id: string;
-  products: Product[];
-}
 
 interface ProductState {
   products: Product[];
@@ -35,12 +31,12 @@ export const getProducts = createAsyncThunk("/products/get", async () => {
   }
 });
 
-// Async thunk to save products (finish order)
+// save products (finish order)
 export const saveProducts = createAsyncThunk<Product[] | undefined, Product[]>(
   "products/save",
   async (products: Product[]) => {
     try {
-      await axios.post("http://localhost:4000/api/products/update", products);
+      await axios.post("http://localhost:4000/api/products", products);
       return products;
     } catch (error) {
       toast.error("Error saving products");
@@ -53,6 +49,7 @@ const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
+
     addProduct: (
       state,
       action: PayloadAction<{
@@ -73,6 +70,7 @@ const productSlice = createSlice({
         : state.products.push({ name, category, quantity: 1 });
       state.total += 1;
     },
+
     deleteProduct: (
       state,
       action: PayloadAction<{
@@ -92,26 +90,26 @@ const productSlice = createSlice({
       }
     },
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(getProducts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.products = action.payload || [];
-        state.total =
-          action.payload?.reduce(
-            (acc, current) => (acc += current.quantity),
-            0,
-          ) || 0;
-      })
-      .addCase(getProducts.rejected, (state) => {
-        state.loading = false;
-        state.products = [];
-        state.total = 0;
-      })
-      .addCase(getProducts.pending, (state) => {
-        state.loading = true;
-      });
-  },
+    extraReducers: (builder) => {
+      builder
+        .addCase(getProducts.fulfilled, (state, action) => {
+          state.loading = false;
+          state.products = action.payload || [];
+          state.total =
+            action.payload?.reduce(
+              (acc, current) => (acc += current.quantity),
+              0,
+            ) || 0;
+        })
+        .addCase(getProducts.rejected, (state) => {
+          state.loading = false;
+          state.products = [];
+          state.total = 0;
+        })
+        .addCase(getProducts.pending, (state) => {
+          state.loading = true;
+        });
+    },
 });
 
 export const { addProduct, deleteProduct } = productSlice.actions;

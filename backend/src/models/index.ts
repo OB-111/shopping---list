@@ -1,11 +1,11 @@
 import { Sequelize } from "sequelize";
 import { ProductFactory } from "./product";
 import { CategoryFactory } from "./category";
-
 import dotenv from "dotenv";
 
 dotenv.config();
 
+// Initializing the Sequelize instance, which manages the connection to the database.
 const sequelize = new Sequelize(
   process.env.DB_NAME!,
   process.env.DB_USER!,
@@ -21,9 +21,13 @@ const sequelize = new Sequelize(
         serverName: process.env.DB_SERVER_NAME,
       },
     },
-    logging: process.env.NODE_ENV === "development" ? console.log : false, // Enable logging in development only
   },
 );
+
+/*
+ creating 'Product' & 'Category' models by calling their factories with Sequelize instance
+ this allows Sequelize to define the structure of their tabels based on their models
+ */ 
 const Product = ProductFactory(sequelize);
 const Category = CategoryFactory(sequelize);
 export { sequelize, Product, Category };

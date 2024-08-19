@@ -8,6 +8,7 @@ interface ProductAttributes {
   quantity: number;
 }
 
+// interface for creating new Product ,'id' is optional when creating a new product since it will be auto-incremented by the database.
 interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}
 
 // class representing the Product model
@@ -21,7 +22,6 @@ class Product
   public quantity!: number;
 }
 
-//  initializes and returns the Category model
 export const ProductFactory = (sequelize: Sequelize): typeof Product => {
   Product.init(
     {
@@ -46,7 +46,6 @@ export const ProductFactory = (sequelize: Sequelize): typeof Product => {
     },
     {
       tableName: "products",
-      // tableName:'shopping_list',
       sequelize,
     },
   );

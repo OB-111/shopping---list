@@ -31,7 +31,7 @@ export const CategoryFactory = (sequelize: Sequelize): typeof Category => {
       sequelize,
     },
   );
-
   return Category;
 };
-export default Category; // Export as default
+
+export default Category;
